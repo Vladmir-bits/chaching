@@ -1,0 +1,84 @@
+var RADIUS = 50;
+var OFF_SCREEN = -200;
+var DELAY = 800;
+var WIN_SCORE = 30;
+
+var coin;
+var score = 15;
+var scoreText;
+
+
+function start(){
+	setupCoin();
+	setTimer(changeCoin, DELAY);
+	mouseClickMethod(clickHandler);
+	
+	scoreText = new Text(score);
+	scoreText.setPosition(0, getHeight());
+	add(scoreText);
+}
+
+
+function setupCoin(){
+	coin = new Circle(RADIUS);
+	coin.setPosition(OFF_SCREEN, OFF_SCREEN);
+	add(coin);
+}
+
+
+function clickHandler(e){
+	var elem = getElementAt(e.getX(), e.getY());
+	if(elem != null && elem.getColor() == "#FFD700"){
+		score++;
+	}else{
+		score--;
+	}
+	
+	if(score == 0){
+		displayMessage("You'r such a loser ");
+	}
+	if(score == WIN_SCORE){
+		displayMessage("CHA CHING! YOU ARE RICH NOW!");
+	}
+	
+	scoreText.setText(score);
+}
+
+// Displays the final message.
+function displayMessage(text){
+	stopTimer(changeCoin);
+	var msg = new Text(text);
+	msg.setPosition(getWidth()/2 - msg.getWidth()/2, 200);
+	add(msg);
+}
+
+// This changes position and color of the coins.
+function changeCoin(){
+	var x = Randomizer.nextInt(coin.getRadius(),
+		getWidth() - coin.getRadius());
+	var y = Randomizer.nextInt(coin.getRadius(), getHeight() - coin.getRadius());
+	
+	coin.setPosition(x, y);
+	changeColor();
+}
+
+// This function changes the color of the 
+// coin by picking a random number: 0, 1 , 2, 3 or 4
+//  and then using that number to pick a color.
+function changeColor(){
+	var colorCode = Randomizer.nextInt(0, 4);
+	var color;
+	if(colorCode == 0){
+		color = "#FFD700";
+	}else if(colorCode == 1){
+		color = "#ADFF2F";
+	}else if(colorCode == 2){
+	    color = "#FF6347";
+	}else if(colorCode == 3){
+	    color = "#C0C0C0";
+	}else{
+		color = "#4169E1";
+	}
+	
+	coin.setColor(color);
+}
